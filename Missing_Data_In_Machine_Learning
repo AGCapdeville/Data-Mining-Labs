@@ -1,0 +1,31 @@
+
+    Different methods to handle missing data in machine learning:
+
+1. Deductive Imputation:
+    Imputation rule defined by logical reasoning, as opposed to a statistical rule.
+    For example, if a person has $10 in their bank on March 5th, and then the bank
+    is missing data for March 6th but has record of that person having $10 on March 7th.
+    We can reasonably impute that they have $10 in their bank on March 7th
+
+2. Mean/Median/Mode Imputation:
+    In this method, any missing values in a given column are replaced with the mean 
+    ( or median, or mode ) of that column.
+
+3. Regression Imputation
+    This approach replaces missing values with a predicted value based on a regression line.
+    Regression is a statistical method which shows the relationship between a dependent variable 
+    and independent variables. 
+    
+    It's expressed as [ y = mx + b ] where m is the slope, b is a constant, x is the 
+    independent variable and y is the dependent variable.
+
+4. Stochastic Regression Imputation
+    This aims to preserve the variability of data. To achieve this, we add an error |
+    (or residual term) to each predicted score. This residual term is normally distributed 
+    with a mean of zero and a variance equal to the variance of the predictor used for imputing.
+
+
+5. Multiply-Stochastic Regression Imputation
+    This is similar to singly-stochastic regression imputation (i.e., where the missing values 
+    in a given column are replaced with the predicted values based on a regression line and random error),
+    but it is done for a few iterations and the final value is just aggregated by the mean.
