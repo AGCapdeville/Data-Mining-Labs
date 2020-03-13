@@ -15,7 +15,7 @@ import numpy as np
 '''
 import pandas as pd
 
-with open('/Users/adamcapdeville/Documents/python/labs/data/iris-data-color.csv') as csvfile:
+with open("./data/iris-data-color.csv") as csvfile:
     data = pd.read_csv(csvfile, delimiter=',')
 
 print(data.columns)
@@ -86,7 +86,7 @@ drop["color"].value_counts().plot.bar()
 
 '''
 # YOUR CODE GOES HERE
-with open('/Users/adamcapdeville/Documents/python/labs/data/iris-data-color.csv') as csvfile:
+with open("./data/iris-data-color.csv") as csvfile:
     data2 = pd.read_csv(csvfile, delimiter=',')
 
 

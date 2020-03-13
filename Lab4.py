@@ -17,7 +17,7 @@ import numpy as np
 
 import pandas as pd
 
-with open('iris-data.csv') as csvfile:
+with open("./data/iris-data-color.csv") as csvfile:
     data = pd.read_csv(csvfile, delimiter=',')
     
 ##########Part 1 ###########

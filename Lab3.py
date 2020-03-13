@@ -29,7 +29,8 @@ import pandas as pd
 '''
 # YOUR CODE GOES HERE
 
-with open('iris-data.csv') as csvfile:
+with open("./data/iris-data-color.csv"
+) as csvfile:
     data = pd.read_csv(csvfile, delimiter=',')
 print(data)
 
