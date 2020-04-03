@@ -2,7 +2,7 @@
 '''
 Lab 7
 '''
-print ("Lab 7")
+print ("Lab 7 ")
 
 import numpy as np
 
@@ -109,57 +109,41 @@ neigh.fit(modifiedData[["sepal_length","sepal_width","petal_length","petal_width
 '''
     5)  use OneHotEncoder and LabelEncoder from sklearn.preprocessing to solve Q2 and Q3
 '''
-# YOUR CODE GOES HERE
-
-# YOUR CODE GOES HERE
-from sklearn.preprocessing import OneHotEncoder
-
-encoder = OneHotEncoder()
-data = encoder.fit_transform(modifiedDataOHE[['color']]).toarray()
-
-modifiedDataOHE = np.concatenate([modifiedDataOHE, data], axis=1)
+# # YOUR CODE GOES HERE
+# from sklearn.preprocessing import OneHotEncoder
+# encoder = OneHotEncoder()
+# data = encoder.fit_transform(modifiedDataOHE[['color']]).toarray()
+# modifiedDataOHE = np.concatenate([modifiedDataOHE, data], axis=1)
+# # colors = encoder.get_feature_names(['color'])
 # colors = encoder.get_feature_names(['color'])
-colors = encoder.get_feature_names(['color'])
-df_ohe = pd.DataFrame(data = modifiedDataOHE)
-
-print(colors[0])
-
-df_ohe.columns = ["sepal_length","sepal_width","petal_length","petal_width", "species", "color", "blue", "pink", "purple", "red"]
-# prints out the label for encoder
-print(df_ohe)
-
-neigh.fit(modifiedData[["sepal_length","sepal_width","petal_length","petal_width", "blue", "pink", "purple", "red"]], modifiedData["species"])
-# prints out in terms of numpy, but lose the labels for each column 
-# print(df_ohe)
-prediction = (neigh.predict(X_test))
-report = classification_report(Y_test, prediction)
-print(report)
-
-from sklearn.preprocessing import LabelEncoder
-
-label_enc = LabelEncoder()
-data = label_enc.fit_transform(modifiedDataLE[['color']])
-le = pd.DataFrame({'color_label':data})
-modifiedDataLE = pd.concat([modifiedDataLE, le], axis = 1)
-
-
-X_test = np.asarray([[5 , 1, 0.2 , 5,'red'],[0.9 , 7, 6.2 , 2.1,'red'], [0.9 , 7, 6.2 , 2.1,'pink'] , [1.9 , 4, 5 , 0.1,'purple'], [5.9 , 3.3, 0.2 , 2.7,'blue']])
-Y_test = np.asarray(['virginica', 'virginica','virginica', 'versicolor' ,'setosa'])
-
-
-testDF = pd.DataFrame(data = X_test)
-colors = label_enc.fit_transform(testDF[4])
-colorsDF = pd.DataFrame(data = colors)
-testDF = pd.concat([testDF, colorsDF], axis = 1)
-testDF = testDF.drop(columns = [4])
-X_test = np.asarray(testDF)
-
-neigh.fit(modifiedDataLE[["sepal_length","sepal_width","petal_length","petal_width", "color_label"]], modifiedDataLE["species"])
-
-prediction = (neigh.predict(X_test))
-report = classification_report(Y_test, prediction)
-print(report)
-
+# df_ohe = pd.DataFrame(data = modifiedDataOHE)
+# print(colors[0])
+# df_ohe.columns = ["sepal_length","sepal_width","petal_length","petal_width", "species", "color", "blue", "pink", "purple", "red"]
+# # prints out the label for encoder
+# # print(df_ohe)
+# neigh.fit(modifiedData[["sepal_length","sepal_width","petal_length","petal_width", "blue", "pink", "purple", "red"]], modifiedData["species"])
+# # prints out in terms of numpy, but lose the labels for each column 
+# # print(df_ohe)
+# prediction = (neigh.predict(X_test))
+# report = classification_report(Y_test, prediction)
+# # print(report)
+# from sklearn.preprocessing import LabelEncoder
+# label_enc = LabelEncoder()
+# data = label_enc.fit_transform(modifiedDataLE[['color']])
+# le = pd.DataFrame({'color_label':data})
+# modifiedDataLE = pd.concat([modifiedDataLE, le], axis = 1)
+# X_test = np.asarray([[5 , 1, 0.2 , 5,'red'],[0.9 , 7, 6.2 , 2.1,'red'], [0.9 , 7, 6.2 , 2.1,'pink'] , [1.9 , 4, 5 , 0.1,'purple'], [5.9 , 3.3, 0.2 , 2.7,'blue']])
+# Y_test = np.asarray(['virginica', 'virginica','virginica', 'versicolor' ,'setosa'])
+# testDF = pd.DataFrame(data = X_test)
+# colors = label_enc.fit_transform(testDF[4])
+# colorsDF = pd.DataFrame(data = colors)
+# testDF = pd.concat([testDF, colorsDF], axis = 1)
+# testDF = testDF.drop(columns = [4])
+# X_test = np.asarray(testDF)
+# neigh.fit(modifiedDataLE[["sepal_length","sepal_width","petal_length","petal_width", "color_label"]], modifiedDataLE["species"])
+# prediction = (neigh.predict(X_test))
+# report = classification_report(Y_test, prediction)
+# # print(report)
 
 
 
@@ -171,16 +155,66 @@ print(report)
     Hint: use train_test_split from sklearn.model_selection (use 30% of your data as a test set)
     plot the results and pick the best value for k
 '''
-
 # YOUR CODE GOES HERE
+print("Lab 8")
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
+with open('./data/iris-data.csv') as csvfile:
+    dataF = pd.read_csv(csvfile, delimiter=',')
+
+target = dataF["species"]
+features = dataF.drop(['species'], axis=1)
+
+X_train, X_test, Y_train, Y_test = train_test_split(features, target, test_size=0.30, random_state=123)
+k_list = [1, 3, 5, 7, 9, 11]
+accuracy_list = []
+for k in k_list:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, Y_train)
+    Y_pred = knn.predict(X_test)
+    accuracy_list.append(metrics.accuracy_score(Y_test, Y_pred))
+# print(accuracy_list)
+big_k = k_list[accuracy_list.index(max(accuracy_list))]
+print("Q1, Big K :",big_k)
+
+import matplotlib.pyplot as plt
+plt.plot(k_list, accuracy_list, label="Q1 train test split")
+plt.title('Cross Validation Methods')
 
 '''
     2)  repeat the same question using 5-fold cross validation method to pick the best k.
     Hint: use KFold from sklearn.model_selection
     plot the results and pick the best value for k
 '''
-
 # YOUR CODE GOES HERE
+from sklearn.model_selection import KFold
+
+# print(len(dataF))
+kf = KFold(n_splits=5, shuffle=True, random_state = 123)
+
+targetAry = target.to_numpy()
+featuresAry = features.to_numpy()
+
+
+for train_index, test_index in kf.split(featuresAry):
+    X_train, X_test = featuresAry[train_index], featuresAry[test_index]
+    Y_train, Y_test = targetAry[train_index], targetAry[test_index]
+
+k_list = [1, 3, 5, 7, 9, 11]
+accuracy_list = []
+
+for k in k_list:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, Y_train)
+    Y_pred = knn.predict(X_test)
+    accuracy_list.append(metrics.accuracy_score(Y_test, Y_pred))
+# print(accuracy_list)
+big_k = k_list[accuracy_list.index(max(accuracy_list))]
+print("Q2, Big K :",big_k)
+plt.plot(k_list, accuracy_list, 'ro', label = 'Q2 k fold')
+
+
 
 '''
     3)  repeat the same question using 5-fold cross validation method to pick the best k.
@@ -188,6 +222,26 @@ print(report)
     plot the results and pick the best value for k
 '''
 # YOUR CODE GOES HERE
+from sklearn.model_selection import cross_val_score
+
+k_list = [1, 3, 5, 7, 9, 11]
+k_scores = []
+for k in k_list:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    scores = cross_val_score(knn, features, target, cv=5, scoring='accuracy')
+    k_scores.append(scores.mean())
+    
+big_k = k_list[k_scores.index(max(k_scores))]
+print("Q3, Big K :",big_k)
+# print(max(k_scores))
+plt.plot(k_list, k_scores, label = 'Q3 cross val')
+plt.legend()
+
+plt.ylabel('accuracy')
+plt.xlabel('k\'s')
+plt.show()
+
+
 
 
 ##########Part 3 ###########
