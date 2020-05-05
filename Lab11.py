@@ -23,6 +23,7 @@ digits = load_digits()
 
 best_overall_score = []
 best_model = ['Logistic Regression', 'Linear SVC', 'SVC']
+best_model_descriptions = []
 
 # the img as a array 8x8
 plt.gray() 
@@ -90,7 +91,8 @@ while ( count != 5.0 ):
                 bestC = count
     count += 1
 print("Logistic Regression:")
-print("\nBest score:", bestScore, "Using: pen: ", bestPen, " solv: ", bestSolv, " count: ", bestC, '\n')
+logReg = "Best score:"+str(bestScore)+"Using: pen: "+str(bestPen)+" solv: "+str(bestSolv)+" count: "+str(bestC)
+best_model_descriptions.append(logReg)
 best_overall_score.append(bestScore)
 
 #  Through observation, we can see that the left most side and right most side of the number vectors are never used or are always zero,
@@ -135,8 +137,12 @@ while ( count != 10.0 ):
                 bestC = count
     count += 1
 print("Linear SVC")
-print("\nBest score:", bestScore, "Using: pen: ", bestPen, " loss: ", bestLos, " count: ", bestC, '\n')
+
+
+linearsvc = "Best score:"+str(bestScore)+"Using: pen: "+str(bestPen)+" loss: "+str(bestLos)+" count: "+str(bestC)
+best_model_descriptions.append(linearsvc)
 best_overall_score.append(bestScore)
+
 
 '''
     3)  Try SVC from sklearn.svm (this classifier can also be used with linear kernel == LinearSVC)
@@ -183,7 +189,8 @@ while ( count != 10.0 ):
                     bestF = f
     count += .5
 print("SVC")
-print("\nBest score:", bestScore, "Using: Kernel: ", bestK, " C: ", bestC, " Degree: ", bestD, 'Funct_Shape:', bestF,'\n')
+svc = "Best score:"+str(bestScore)+"Using: Kernel: "+str(bestK)+" C: "+str(bestC)+" Degree: "+str(bestD)+'Funct_Shape:'+str(bestF)
+best_model_descriptions.append(svc)
 best_overall_score.append(bestScore)
 
 
@@ -194,6 +201,8 @@ print("##########  PART 2  ##########\n")
 '''
 # YOUR CODE GOES HERE
 print("The best one is:", best_model[best_overall_score.index(max(best_overall_score))])
+
+print("SCORE: ", best_model_descriptions[best_overall_score.index(max(best_overall_score))])
 
 ##########Part 3 ###########
 # IGNORE
