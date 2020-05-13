@@ -1,4 +1,3 @@
-
 '''
 Lab 12
 '''
@@ -58,32 +57,58 @@ import keras
 from keras.models import load_model
 import h5py
 
+norm_x_train = tf.keras.utils.normalize(x_train, axis = 1)
+norm_x_test = tf.keras.utils.normalize(x_test, axis = 1)
 
-ohe = OneHotEncoder(categories = "auto",sparse = False)
-# print(len(x_train[0]))
-X_train_enc = ohe.fit_transform(x_train)
-X_test_enc = ohe.fit_transform(x_test)
-# print(X_train_enc.shape)
+print(50*"=")
+print("PART 2 : Q1 NN with activation: relu")
 
-norm_x_train = tf.keras.utils.normalize(X_train_enc, axis = 1)
-norm_x_test = tf.keras.utils.normalize(X_test_enc, axis = 1)
+model_0 = tf.keras.models.Sequential()
+model_0.add(tf.keras.layers.Flatten())
+model_0.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
+model_0.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model_0.fit(norm_x_train, y_train, batch_size=32, epochs=10)
 
-# norm_x_train = tf.keras.utils.normalize(x_train, axis = 1)
-# norm_x_test = tf.keras.utils.normalize(x_test, axis = 1)
+val_loss, val_acc = model_0.evaluate(norm_x_test, y_test)
+print(40*"=")
+print("activation = relu:")
+print("loss:",val_loss, ", acc:",val_acc)
+print(40*"=")
 
-model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Flatten())
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
+print(50*"=")
+print("PART 2 : Q1 NN with activation: sigmoid")
+model_1 = tf.keras.models.Sequential()
+model_1.add(tf.keras.layers.Flatten())
+model_1.add(tf.keras.layers.Dense(128, activation=tf.nn.sigmoid))
+model_1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model_1.fit(norm_x_train, y_train, batch_size=32, epochs=10)
+
+val_loss, val_acc = model_1.evaluate(norm_x_test, y_test)
+print(40*"=")
+print("activation = sigmoid:")
+print("loss:",val_loss, ", acc:",val_acc)
+print(40*"=")
 
 
 '''
     2)  Use 'softmax' activation function in output layer, print the predictions/ what is the difference?
 '''
 # YOUR CODE GOES HERE
-model.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax))
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-model.fit(norm_x_train, y_train, epochs=3)
+print(50*"=")
+print("PART 2 : Q2 NN with Softmax")
+model_2 = tf.keras.models.Sequential()
+model_2.add(tf.keras.layers.Flatten())
+model_2.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax))
+model_2.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+model_2.fit(norm_x_train, y_train,batch_size=32, epochs=10)
+
+val_loss, val_acc = model_2.evaluate(norm_x_test, y_test)
+print(40*"=")
+print("activation = softmax:")
+print("loss:",val_loss, ", acc:",val_acc)
+print(40*"=")
+
+print(50*"=")
 
 
 '''
@@ -93,13 +118,12 @@ model.fit(norm_x_train, y_train, epochs=3)
 # serialize model to JSON
 from keras.models import model_from_json
 
-model_json = model.to_json()
+model_json = model_2.to_json()
 with open("digits_model.json", "w") as json_file:
     json_file.write(model_json)
 # serialize weights to HDF5
-model.save_weights("digits_model.h5")
+model_2.save_weights("digits_model.h5")
 print("Saved model to disk")
-
 
 
 '''
@@ -118,14 +142,13 @@ load_model.load_weights("digits_model.h5")
 print("Loaded model from disk")
  
 # evaluate loaded model on test data
-load_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+load_model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-print("BIG 1DICK 3LENGTHS : X ", len(norm_x_test), "whats that dicks shape? :", norm_x_test.shape)
-print("BIG 2DICK 4LENGTHS : Y ", len(y_test), "whats that dicks shape? :", y_test.shape )
-
-score = load_model.evaluate(x_test, y_test, verbose=0)
-# score = loaded_model.evaluate(X, Y, verbose=0)
-# print("%s: %.2f%%" % (load_model.metrics_names[1], score[1]*100))
+val_loss, val_acc = load_model.evaluate(norm_x_test, y_test)
+print(40*"=")
+print("Loaded Model: ( model_2 )")
+print("loss:",val_loss, ", acc:",val_acc)
+print(40*"=")
 
 
 
